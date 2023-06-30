@@ -20,7 +20,8 @@ const thoughtSchema = new Schema({
         type: String,
         required: true,
     },
-
+    
+    //reaction field. reactionSchema subdocument
     reactions: [reactionSchema],
 },
 {

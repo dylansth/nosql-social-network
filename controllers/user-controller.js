@@ -58,14 +58,53 @@ const userController = {
 
       deleteUser(req, res) {
         User.findByIdAndDelete(req.params.id)
-          .then((userData) => {
+        .then((userData) => {
+          if (!userData) {
+            return res.status(404).json({ message: 'No user found with this id!' });
+          }
+  
+          // Delete associated thoughts
+          // If username value matches username field, Delete.
+          return Thought.deleteMany({ username: userData.username });
+        })
+        .then(() => {
+          res.json({ message: 'User and associated thoughts deleted successfully!' });
+        })
+        .catch((err) => res.status(500).json(err));
+      },
+
+      addFriend(req, res) {
+        User.findByIdAndUpdate(
+          req.params.userId,
+          { $addToSet: { friends: req.params.friendId } },
+          { new: true }
+        )
+          .select('-__v')
+          .then(userData => {
             if (!userData) {
-              res.status(404).json({ message: "No user found with this id!" });
+              res.status(404).json({ message: 'No user found with this id!' });
               return;
             }
-            res.json({ message: "User deleted successfully!" });
+            res.json(userData);
           })
-          .catch((err) => res.status(500).json(err));
+          .catch(err => res.status(500).json(err));
+      },
+
+      removeFriend(req, res) {
+        User.findByIdAndUpdate(
+          req.params.userId,
+          { $pull: { friends: req.params.friendId } },
+          { new: true }
+        )
+          .select('-__v')
+          .then(userData => {
+            if (!userData) {
+              res.status(404).json({ message: 'No user found with this id!' });
+              return;
+            }
+            res.json(userData);
+          })
+          .catch(err => res.status(500).json(err));
       },
 }
 

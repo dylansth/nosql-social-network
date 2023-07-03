@@ -1,4 +1,4 @@
-const { User, Thought, Reaction } = require('../models');
+const { User, Thought } = require('../models');
 
 const userController = {
     getAllUsers(req, res) {
@@ -76,6 +76,7 @@ const userController = {
       addFriend(req, res) {
         User.findByIdAndUpdate(
           req.params.userId,
+          // addToSet Operator: Uniquely adds frindsId to frinds array.
           { $addToSet: { friends: req.params.friendId } },
           { new: true }
         )
@@ -93,6 +94,7 @@ const userController = {
       removeFriend(req, res) {
         User.findByIdAndUpdate(
           req.params.userId,
+          // pull operator: Removes friendId from friends array.
           { $pull: { friends: req.params.friendId } },
           { new: true }
         )

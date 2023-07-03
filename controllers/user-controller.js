@@ -45,7 +45,7 @@ const userController = {
       },
 
       updateUser(req, res) {
-        User.findByIdAndUpdate(req.params.id, req.body, {new: true})
+        User.findByIdAndUpdate(req.params.userId, req.body, {new: true})
         .then((userData) => {
           if (!userData) {
             res.status(404).json({ message: "No user found with this id!" });

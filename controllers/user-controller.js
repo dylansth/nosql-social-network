@@ -57,14 +57,14 @@ const userController = {
       },
 
       deleteUser(req, res) {
-        User.findByIdAndDelete(req.params.id)
+        User.findByIdAndDelete(req.params.userId)
         .then((userData) => {
           if (!userData) {
             return res.status(404).json({ message: 'No user found with this id!' });
           }
-  
+    
           // Delete associated thoughts
-          // If username value matches username field, Delete.
+          // If username value matches username field, delete.
           return Thought.deleteMany({ username: userData.username });
         })
         .then(() => {
